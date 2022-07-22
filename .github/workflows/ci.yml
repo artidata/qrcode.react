@@ -7,13 +7,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: '16'
           cache: 'yarn'
       - run: yarn install
       - run: make
+      - uses: actions/upload-artifact@v3
+        with:
+          name: build-output
+          path: |
+            lib
+            examples/**/*.js
   test:
     needs: build
     runs-on: ubuntu-latest
@@ -24,8 +30,8 @@ jobs:
           - '17'
           - '18'
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: '16'
           cache: 'yarn'
@@ -37,8 +43,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: '16'
           cache: 'yarn'
@@ -48,10 +54,13 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: '16'
           cache: 'yarn'
       - run: yarn install
+      - uses: actions/download-artifact@v3
+        with:
+          name: build-output
       - run: yarn typecheck
